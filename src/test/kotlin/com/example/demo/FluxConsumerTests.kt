@@ -22,7 +22,8 @@ class FluxConsumerTests{
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
-            put(ConsumerConfig.GROUP_ID_CONFIG, "aaa")
+            put(ConsumerConfig.GROUP_ID_CONFIG, "bbb")
+            put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false")
             put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest") // by default
         }
 
@@ -38,13 +39,13 @@ class FluxConsumerTests{
             while(true){
                 val records = consumer.poll(Duration.ofSeconds(1))
                 for (record in records) {
-                    println("next....")
                     sink.next(record!!)
                 }
             }
 
         }
 
+        println("I dont need the thread!")
         publisher.subscribe({item -> println(item)})
     }
 }
