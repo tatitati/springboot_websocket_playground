@@ -3,7 +3,9 @@ package com.example.demo
 import org.junit.jupiter.api.Test
 import reactor.core.Disposable
 import reactor.core.publisher.Flux
+import reactor.core.publisher.SynchronousSink
 import java.time.Duration
+import java.util.function.BiFunction
 
 class WebfluxTests {
 
@@ -63,6 +65,32 @@ class WebfluxTests {
         // 2
         // 3
         // ...
+    }
+
+    @Test
+    fun `pragrammatic sequence`(){
+        val publisher: Flux<String?> = Flux.generate({ 0 }) { state: Int, sink: SynchronousSink<String?> ->
+            sink.next("3 x " + state + " = " + 3 * state)
+            if (state == 10) sink.complete()
+            state + 1
+        }
+
+        publisher.subscribe(
+                { item: String? -> println(item)}
+        )
+
+        // OUTPUT
+        // 3 x 0 = 0
+        // 3 x 1 = 3
+        // 3 x 2 = 6
+        // 3 x 3 = 9
+        // 3 x 4 = 12
+        // 3 x 5 = 15
+        // 3 x 6 = 18
+        // 3 x 7 = 21
+        // 3 x 8 = 24
+        // 3 x 9 = 27
+        // 3 x 10 = 30
     }
 
 
