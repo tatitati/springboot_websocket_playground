@@ -12,5 +12,23 @@ class WebfluxTests {
         val subscription: Disposable = publisher.subscribe{ item: String ->
             println(item)
         }
+
+        //OUTPUT:
+        // aaa
+        // bbbb
+    }
+
+    @Test
+    fun `basic test2`(){
+        val publisher: Flux<String> = Flux.just("aaa", "bbbb")
+        val subscription: Disposable = publisher.subscribe(
+                { item: String -> println(item)},
+                {e -> println(e)},
+                {println("completed")}
+        )
+        //OUTPUT:
+        // aaa
+        // bbbb
+        // completed
     }
 }
