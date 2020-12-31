@@ -69,11 +69,14 @@ class WebfluxTests {
 
     @Test
     fun `pragrammatic sequence`(){
-        val publisher: Flux<String?> = Flux.generate({ 0 }) { state: Int, sink: SynchronousSink<String?> ->
-            sink.next("3 x " + state + " = " + 3 * state)
-            if (state == 10) sink.complete()
-            state + 1
-        }
+        val publisher: Flux<String?> = Flux.generate(
+                {0},
+                { state: Int, sink: SynchronousSink<String?> ->
+                    sink.next("3 x " + state + " = " + 3 * state)
+                    if (state == 10) sink.complete()
+                    state + 1
+                }
+        )
 
         publisher.subscribe(
                 { item: String? -> println(item)}
