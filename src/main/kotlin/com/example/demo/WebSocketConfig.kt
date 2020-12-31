@@ -18,15 +18,11 @@ class SocketHandler : TextWebSocketHandler() {
     var sessions: MutableList<WebSocketSession> = CopyOnWriteArrayList()
     @Throws(InterruptedException::class, IOException::class)
     public override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-
-        /*for(WebSocketSession webSocketSession : sessions) {
-			webSocketSession.sendMessage(new TextMessage("Hello " + value.get("name") + " !"));
-		}*/session.sendMessage(TextMessage("Hello " + message + " !"))
+		session.sendMessage(TextMessage("Hello " + message + " !"))
     }
 
     @Throws(Exception::class)
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        //the messages will be broadcasted to all users.
         sessions.add(session)
     }
 }
