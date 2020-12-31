@@ -6,6 +6,11 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.SynchronousSink
 import java.time.Duration
 import java.util.function.BiFunction
+import java.util.concurrent.atomic.AtomicLong
+
+import org.apache.coyote.http11.Constants.a
+import java.util.*
+
 
 class WebfluxTests {
 
@@ -68,32 +73,51 @@ class WebfluxTests {
     }
 
     @Test
-    fun `pragrammatic sequence`(){
-        val publisher: Flux<String?> = Flux.generate(
+    fun `SINK pragrammatic sequence`(){
+        data class Person(val uuid: String)
+
+
+        val publisher: Flux<Person?> = Flux.generate(
                 {0},
-                { state: Int, sink: SynchronousSink<String?> ->
-                    sink.next("3 x " + state + " = " + 3 * state)
+                { state, sink: SynchronousSink<Person?> ->
+                    sink.next(Person(UUID.randomUUID().toString()))
                     if (state == 10) sink.complete()
-                    state + 1
+                    state+1
                 }
         )
+
+        publisher.subscribe(
+                { item: Person? -> println(item)}
+        )
+
+        // OUTPUT
+        // Person(uuid=43364d87-499b-4376-b61b-1eb7d287dbc6)
+        // Person(uuid=511b8726-6acb-4fd1-83de-94bc99dd4fe1)
+        // Person(uuid=32a3678f-1095-4741-92c4-72dc16d72ac4)
+        // Person(uuid=c4985143-66b7-41e9-b093-e5bcd00e56c6)
+        // Person(uuid=c5c1b420-0340-4185-aa90-ed55c6e37a78)
+        // Person(uuid=483f891d-394f-45c2-9981-9e5aa23c133b)
+        // Person(uuid=e6acbd0e-83a7-435e-9e9e-30355a06bf54)
+        // Person(uuid=15072ffa-97ec-4b95-8dcf-7252b52486ea)
+        // Person(uuid=3496144a-c7d0-4f84-a27a-62461485f91a)
+        // Person(uuid=c9de8541-5bfa-44eb-a54b-fb1565ca456b)
+        // Person(uuid=16327883-33ea-421a-9fa3-7a5a12c612c1)
+    }
+
+    @Test
+    fun `SINK with a consumer`(){
+        val publisher = Flux.generate({ AtomicLong() },
+                { state: AtomicLong, sink: SynchronousSink<String?> ->
+                    val i = state.getAndIncrement()
+                    sink.next("3 x " + i + " = " + 3 * i)
+                    if (i == 10L) sink.complete()
+                    state
+                }) { state: AtomicLong -> println("state: $state") } // on complete function
 
         publisher.subscribe(
                 { item: String? -> println(item)}
         )
 
-        // OUTPUT
-        // 3 x 0 = 0
-        // 3 x 1 = 3
-        // 3 x 2 = 6
-        // 3 x 3 = 9
-        // 3 x 4 = 12
-        // 3 x 5 = 15
-        // 3 x 6 = 18
-        // 3 x 7 = 21
-        // 3 x 8 = 24
-        // 3 x 9 = 27
-        // 3 x 10 = 30
     }
 
 
