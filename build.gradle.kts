@@ -21,6 +21,11 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+	// kafka
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.apache.kafka:kafka-clients:2.4.0")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

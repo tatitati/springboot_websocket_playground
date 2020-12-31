@@ -9,7 +9,10 @@ import java.util.function.BiFunction
 import java.util.concurrent.atomic.AtomicLong
 
 import org.apache.coyote.http11.Constants.a
+import reactor.core.publisher.FluxSink
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.Consumer
 
 
 class WebfluxTests {
@@ -117,8 +120,22 @@ class WebfluxTests {
         publisher.subscribe(
                 { item: String? -> println(item)}
         )
-
     }
 
+    @Test
+    fun `create`() {
+        val publisher = Flux.create { sink: FluxSink<Any?> ->
+            val words = listOf("aaaa", "bbbbbb")
+            for (word in words){
+                sink.next(word + "!!!")
+            }
+            sink.complete()
+        }
 
+        publisher.subscribe({item -> println(item)})
+
+        // OUTPU:
+        // aaaa!!!
+        // bbbbbb!!!
+    }
 }
