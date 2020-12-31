@@ -13,6 +13,7 @@ import reactor.core.publisher.FluxSink
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
+import java.util.function.LongConsumer
 
 
 class WebfluxTests {
