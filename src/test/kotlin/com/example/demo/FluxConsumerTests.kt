@@ -45,7 +45,6 @@ class FluxConsumerTests{
 
         }
 
-        println("I dont need the thread!")
         publisher.subscribe({item -> println(item)})
     }
 }

@@ -16,7 +16,7 @@ import java.util.function.Consumer
 import java.util.function.LongConsumer
 
 
-class WebfluxTests {
+class fluxTests {
 
     @Test
     fun `basic test`(){
