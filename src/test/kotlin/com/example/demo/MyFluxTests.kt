@@ -16,7 +16,7 @@ import java.util.function.Consumer
 import java.util.function.LongConsumer
 
 
-class fluxTests {
+class MyFluxTests {
 
     @Test
     fun `basic test`(){
@@ -25,9 +25,12 @@ class fluxTests {
             println(item)
         }
 
+        println("DONE")
+
         //OUTPUT:
         // aaa
         // bbbb
+        // DONE
     }
 
     @Test
@@ -38,25 +41,33 @@ class fluxTests {
                 {e -> println(e)},
                 {println("completed")}
         )
+        println("DONE")
+
         //OUTPUT:
         // aaa
         // bbbb
         // completed
+        // DONE
     }
 
     @Test
     fun `basic test3`(){
         val publisher: Flux<String> = Flux.just("aaa", "bbbb", "cccc", "dddd", "eeee")
         val subscription: Disposable = publisher.subscribe(
-                { item: String -> println(item)},
-                {e -> println(e)},
-                {println("completed")},
-                {sub -> sub.request(3)}
+                { item: String -> println(item)}, // on next
+                {e -> println(e)},                // on error
+                {println("completed")},           // on complete
+                {sub -> sub.request(3)}        // on subscribe
         )
+
+        println("DONE")
         //OUTPUT:
         // aaa
         // bbbb
         // cccc
+        // DONE
+
+        // we only get 3 as requested (on complete is not even executed because of this)
     }
 
     @Test
@@ -66,14 +77,16 @@ class fluxTests {
                 { item: Long -> println(item)}
         )
 
+        println("DONE")
         Thread.sleep(10000)
 
         //OUTPUT:
+        // DONE
         // 0
         // 1
         // 2
         // 3
-        // ...
+        // 4
     }
 
     @Test
@@ -87,12 +100,15 @@ class fluxTests {
                     sink.next(Person(UUID.randomUUID().toString()))
                     if (state == 10) sink.complete()
                     state+1
-                }
+                },
+                {println("completed")}
         )
 
         publisher.subscribe(
                 { item: Person? -> println(item)}
         )
+
+        println("end line")
 
         // OUTPUT
         // Person(uuid=43364d87-499b-4376-b61b-1eb7d287dbc6)
@@ -106,6 +122,8 @@ class fluxTests {
         // Person(uuid=3496144a-c7d0-4f84-a27a-62461485f91a)
         // Person(uuid=c9de8541-5bfa-44eb-a54b-fb1565ca456b)
         // Person(uuid=16327883-33ea-421a-9fa3-7a5a12c612c1)
+        // completed
+        // end line
     }
 
     @Test
