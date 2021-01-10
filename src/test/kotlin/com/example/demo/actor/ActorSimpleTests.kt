@@ -1,11 +1,10 @@
-package com.example.demo
+package com.example.demo.actor
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.channels.actor
 import org.junit.jupiter.api.Test
 
-class ActorTests {
+class ActorSimpleTests {
 
     open class CounterMsg(){}
     object MsgIncCounter: CounterMsg() // one-way message to increment counter
@@ -26,9 +25,9 @@ class ActorTests {
         runBlocking<Unit> {
             val actorCounter = counterActor() // create the actor
             withContext(Dispatchers.Default) {
-                    actorCounter.send(MsgIncCounter)
-                    actorCounter.send(MsgIncCounter)
-                    actorCounter.send(MsgIncCounter)
+                actorCounter.send(MsgIncCounter)
+                actorCounter.send(MsgIncCounter)
+                actorCounter.send(MsgIncCounter)
             }
 
             val response = CompletableDeferred<Int>()

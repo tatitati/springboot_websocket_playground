@@ -1,20 +1,15 @@
-package com.example.demo
+package com.example.demo.flux
 
 import org.junit.jupiter.api.Test
+import org.reactivestreams.Subscription
 import reactor.core.Disposable
+import reactor.core.publisher.BaseSubscriber
 import reactor.core.publisher.Flux
+import reactor.core.publisher.FluxSink
 import reactor.core.publisher.SynchronousSink
 import java.time.Duration
-import java.util.function.BiFunction
-import java.util.concurrent.atomic.AtomicLong
-
-import org.apache.coyote.http11.Constants.a
-import reactor.core.publisher.FluxSink
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.Consumer
-import java.util.function.LongConsumer
-
+import java.util.concurrent.atomic.AtomicLong
 
 class MyFluxTests {
 
@@ -95,13 +90,13 @@ class MyFluxTests {
 
 
         val publisher: Flux<Person?> = Flux.generate(
-                {0},
+                { 0 },
                 { state, sink: SynchronousSink<Person?> ->
                     sink.next(Person(UUID.randomUUID().toString()))
                     if (state == 10) sink.complete()
-                    state+1
+                    state + 1
                 },
-                {println("completed")}
+                { println("completed") }
         )
 
         publisher.subscribe(
@@ -145,7 +140,7 @@ class MyFluxTests {
     fun `create`() {
         val publisher = Flux.create { sink: FluxSink<Any?> ->
             val words = listOf("aaaa", "bbbbbb")
-            for (word in words){
+            for (word in words) {
                 sink.next(word + "!!!")
             }
             sink.complete()
@@ -156,5 +151,28 @@ class MyFluxTests {
         // OUTPU:
         // aaaa!!!
         // bbbbbb!!!
+    }
+
+    @Test
+    fun `using base`(){
+        Flux.range(1, 10)
+                .doOnRequest { r: Long -> println("request of $r") }
+                .subscribe(object : BaseSubscriber<Int>() {
+                    override fun hookOnSubscribe(subscription: Subscription) {
+                        request(5)
+                    }
+
+                    override fun hookOnNext(integer: Int) {
+                        println("sending $integer")
+
+                    }
+                })
+
+        // request of 5
+        // sending 1
+        // sending 2
+        // sending 3
+        // sending 4
+        // sending 5
     }
 }

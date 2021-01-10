@@ -1,21 +1,13 @@
-package com.example.demo
+package com.example.demo.flux
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
-import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.Test
-import reactor.core.publisher.EmitterProcessor
-import java.time.Duration
-import java.util.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
-import reactor.core.scheduler.Scheduler
-
+import java.time.Duration
+import java.util.*
 
 class FluxConsumerTests{
     fun buildConsumer(): KafkaConsumer<String, String> {
@@ -38,7 +30,7 @@ class FluxConsumerTests{
     @Test
     fun`Flux with create`(){
         var publisher: Flux<ConsumerRecord<String, String>> = Flux.create { sink: FluxSink<ConsumerRecord<String, String>> ->
-            while(true){
+            while (true) {
                 val records = consumer.poll(Duration.ofSeconds(1))
                 for (record in records) {
                     sink.next(record!!)
@@ -61,7 +53,7 @@ class FluxConsumerTests{
     @Test
     fun `flux with push`(){
         var publisher: Flux<ConsumerRecord<String, String>> = Flux.push { sink: FluxSink<ConsumerRecord<String, String>> ->
-            while(true){
+            while (true) {
                 val records = consumer.poll(Duration.ofSeconds(1))
                 for (record in records) {
                     sink.next(record!!)

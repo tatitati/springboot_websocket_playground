@@ -22,6 +22,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+	implementation("io.projectreactor.kafka:reactor-kafka:1.3.1")
 
 	// kafka
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
