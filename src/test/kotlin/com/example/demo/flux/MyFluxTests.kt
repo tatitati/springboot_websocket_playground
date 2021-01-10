@@ -1,5 +1,6 @@
 package com.example.demo.flux
 
+import kotlinx.coroutines.delay
 import org.junit.jupiter.api.Test
 import org.reactivestreams.Subscription
 import reactor.core.Disposable
@@ -18,6 +19,7 @@ class MyFluxTests {
         val publisher: Flux<String> = Flux.just("aaa", "bbbb")
         val subscription: Disposable = publisher.subscribe{ item: String ->
             println(item)
+            Thread.sleep(5000)
         }
 
         println("DONE")
@@ -66,7 +68,7 @@ class MyFluxTests {
     }
 
     @Test
-    fun `inifinite flux1`(){
+    fun `a non blocking flux`(){
         val publisher: Flux<Long> = Flux.interval(Duration.ofSeconds(2))
         val subscription: Disposable = publisher.subscribe(
                 { item: Long -> println(item)}
@@ -87,7 +89,6 @@ class MyFluxTests {
     @Test
     fun `SINK pragrammatic sequence`(){
         data class Person(val uuid: String)
-
 
         val publisher: Flux<Person?> = Flux.generate(
                 { 0 },
@@ -147,10 +148,12 @@ class MyFluxTests {
         }
 
         publisher.subscribe({item -> println(item)})
+        println("DONE")
 
-        // OUTPU:
+        // OUTPUT:
         // aaaa!!!
         // bbbbbb!!!
+        // DONE
     }
 
     @Test
@@ -168,11 +171,13 @@ class MyFluxTests {
                     }
                 })
 
+        println("DONE")
         // request of 5
         // sending 1
         // sending 2
         // sending 3
         // sending 4
         // sending 5
+        // DONE
     }
 }
