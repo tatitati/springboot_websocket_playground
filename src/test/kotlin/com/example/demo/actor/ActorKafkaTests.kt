@@ -26,13 +26,12 @@ class ActorKafkaTests {
         return consumer
     }
 
-    val consumer = buildConsumer()
-
-
     open class MsgKafka(){}
     object MsgStart: MsgKafka()
     object MsgPause: MsgKafka()
     object MsgResume: MsgKafka()
+
+    val consumer = buildConsumer()
 
     fun CoroutineScope.actorKafka(kafkaConsumer: Consumer<String, String>) = actor<MsgKafka> {
         var desiredStated: MsgKafka? = null
