@@ -19,9 +19,13 @@ class CounterRegistry : CoroutineScope {
                 is MsgIncrement -> {
                     println("received")
                     number++
-                }
+                } else -> whatever()
             }
         }
+    }
+
+    fun whatever(){
+        println("hi")
     }
 
     suspend fun inc() {
