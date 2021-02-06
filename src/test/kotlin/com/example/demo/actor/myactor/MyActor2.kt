@@ -16,6 +16,7 @@ class CounterRegistry : CoroutineScope {
         for (message in channel) {
             when (message) {
                 is MsgIncrement -> {
+                    println("received")
                     number++
                 }
             }
@@ -23,6 +24,7 @@ class CounterRegistry : CoroutineScope {
     }
 
     suspend fun inc() {
+        println("sending inc...")
         actor.send(MsgIncrement())
     }
 
