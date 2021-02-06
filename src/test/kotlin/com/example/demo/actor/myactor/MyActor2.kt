@@ -12,6 +12,7 @@ class CounterRegistry : CoroutineScope {
     override val coroutineContext = Dispatchers.Unconfined + job
     private val actor = myactor()
     var number = 0
+    // writes through the actor
     fun CoroutineScope.myactor() = actor<Msg> {
         for (message in channel) {
             when (message) {
@@ -28,6 +29,7 @@ class CounterRegistry : CoroutineScope {
         actor.send(MsgIncrement())
     }
 
+    // reads directly from the value, not needed through the actor
     fun getNumber(){
         println(number)
     }
@@ -39,21 +41,6 @@ class CounterRegistry : CoroutineScope {
     //     println(finalValue)
     // }
 }
-
-// private fun CoroutineScope.myactor2() = actor<Msg> {
-//     var number: Int = 0
-//
-//     for (message in channel) {
-//         when (message) {
-//             is MsgIncrement -> {
-//                 number++
-//             }
-//             is MsgRetrieve -> {
-//                 message.result.complete(number)
-//             }
-//         }
-//     }
-// }
 
 open class Msg
 class MsgIncrement: Msg()
